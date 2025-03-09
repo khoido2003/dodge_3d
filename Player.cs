@@ -3,6 +3,9 @@ using Godot;
 
 public partial class Player : CharacterBody3D
 {
+    [Signal]
+    public delegate void HitEventHandler();
+
     // How fast the player moves in meters per second.
     [Export]
     public int Speed { get; set; } = 14;
@@ -90,5 +93,16 @@ public partial class Player : CharacterBody3D
         }
 
         MoveAndSlide();
+    }
+
+    private void Die()
+    {
+        EmitSignal(SignalName.Hit);
+        QueueFree();
+    }
+
+    private void OnMobDetectorBodyEntered(Node3D body)
+    {
+        Die();
     }
 }
